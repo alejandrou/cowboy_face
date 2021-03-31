@@ -25,7 +25,7 @@ El autor de este proyecto es el estudiante Alejandro Daniel Herrera Cárdenes pa
 
 ## Trabajo realizado
 
-El trabajo se basa en hacer una escena con iluminación. En esta práctica aproveché las prácticas anteriores e hice como la forma de las bolas de billar con el sol en el centro.
+El trabajo se basa en hacer usando la herramienta OpenCV situar enncima de la cabeza, ojos y boca un sombrero, gafas de sol y bigote respectivamente.
 
 ## Decisiones adoptadas
 
