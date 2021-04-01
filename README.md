@@ -32,7 +32,7 @@ El trabajo se basa en hacer usando la herramienta OpenCV situar enncima de la ca
 Las mayores decisiones tomadas y las que mas pruebas requirieron fue la programación de los métodos para la realización de la práctica. En este caso que las imágenes se situaran en la posición correcta de la cara.
 
 
-* Metodos que manejan tanto la cámara como la iluminación.
+* Metodos que situan las imágenes alrededor de los ojos la boca y encima de la cabeza.
   ```
   void FaceDetect(Mat grey)
   {
