@@ -29,7 +29,7 @@ El trabajo se basa en hacer usando la herramienta OpenCV situar enncima de la ca
 
 ## Decisiones adoptadas
 
-Las mayores decisiones tomadas y las que mas pruebas requirieron fue la colocación de los planetas y la iluminación.
+Las mayores decisiones tomadas y las que mas pruebas requirieron fue la programación de los métodos para la realización de la práctica. En este caso que las imágenes se situaran en la posición correcta de la cara.
 
 
 * Metodos que manejan tanto la cámara como la iluminación.
@@ -167,7 +167,7 @@ Para ayudarme en la realización de esta aplicación usé la API que te proporci
 
 ## Resultado
 
-Añado un GIF con el resultado de la aplicación final con el sistema planetario.
+Añado un GIF con el resultado de la aplicación final.
 
 Al ir un poco lento de FPS para realizar el gif usé el programa [Gyazo](https://gyazo.com/) para que sea más visible el uso de la cámara. Se puede ver en el link a continuación. El video esta en la carpeta imágenes en caso de que el link no funcione.
 * [Vídeo de la ejecución final](https://gyazo.com/fe843e34a0b2bb0985daa7e230e055d3).
