@@ -34,45 +34,123 @@ Las mayores decisiones tomadas y las que mas pruebas requirieron fue la colocaci
 
 * Metodos que manejan tanto la cámara como la iluminación.
   ```
-  void setCamera() {
-    if (pause) camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
-    else camera(posCam.x, posCam.y, posCam.z, x, height/2.0, 75*8+20, 0, 1, 0);
+  void FaceDetect(Mat grey)
+  {
+    Mat auxroi;
+  
+    //Detección de rostros
+    MatOfRect faces = new MatOfRect();
+    face.detectMultiScale(grey, faces, 1.15, 3, 
+    Objdetect.CASCADE_SCALE_IMAGE, 
+    new Size(60, 60), new Size(200, 200));
+    Rect [] facesArr = faces.toArray();
+  
+    //Búsqueda de ojos
+    MatOfRect leyes,reyes;
+    for (Rect r : facesArr) {    
+    //Izquierdo (en la imagen)
+    leyes = new MatOfRect();
+    Rect roi=new Rect(r.x,r.y,(int)(r.width*0.7),(int)(r.height*0.6));
+    auxroi= new Mat(grey, roi);
+      
+    //Detecta
+    leye.detectMultiScale(auxroi, leyes, 1.15, 3, 
+    Objdetect.CASCADE_SCALE_IMAGE, 
+    new Size(30, 30), new Size(200, 200));
+    Rect [] leyesArr = leyes.toArray();
+    
+    leyes.release();
+    auxroi.release(); 
+     
+     
+    //Derecho (en la imagen)
+    reyes = new MatOfRect();
+    roi=new Rect(r.x+(int)(r.width*0.3),r.y,(int)(r.width*0.7),(int)(r.height*0.6));
+    auxroi= new Mat(grey, roi);
+    
+    //Detecta
+    reye.detectMultiScale(auxroi, reyes, 1.15, 3, 
+    Objdetect.CASCADE_SCALE_IMAGE, 
+    new Size(30, 30), new Size(200, 200));
+    Rect [] reyesArr = reyes.toArray();
+    
+    reyes.release();
+    auxroi.release();
+    
+     drawOutfit(leyesArr, reyesArr, r);
+    }
+  
+    faces.release();
+  }
+  
+  void drawOutfit(Rect[] leyes, Rect[] reyes, Rect face){
+  Rect[][] pairs = getPairs(leyes, reyes, face);
+  for (int i = 0; i < pairs.length; i++){
+    if (pairs[i][0] != null){
+      PImage aux = glasses.copy();
+      Rect r = pairs[i][0];
+      Rect l = pairs[i][1];
+      int imgWidth = l.x + l.width + 40 - r.x;
+      int imgHeight = r.height;
+      aux.resize(imgWidth, imgHeight);
+      image(aux, r.x - 10, r.y);
+      
+      aux = moustache.copy();
+      int x = r.x + (int)(r.width *0.7);
+      int xEnd = l.x + (int)(l.width * 0.8);
+      imgWidth = xEnd - x;
+      imgHeight = (int)(face.height * 0.2);
+      aux.resize(imgWidth, imgHeight);
+      int y = face.y + (int)(face.height * 0.65);
+      image(aux, x, y);
+    }
+  }
+  
+    if (face != null){
+      PImage aux = top_hat.copy();
+      float resolution = (float)aux.width / (float)aux.height;
+      int imgWidth = face.width;
+      int imgHeight = face.height;
+      aux.resize(imgWidth, imgHeight);
+      image(aux, face.x, face.y - imgHeight);
+    }
   }
 
-  void lightControl() {
-    if (lightUp) light = (light < 5000)? light+40 : 5000;
-    if (lightDown) light = (light > -5000)? light-40 : -5000;
+  Rect[][] getPairs(Rect[] leyes, Rect[] reyes, Rect face){
+  
+    Rect[][] result = new Rect[leyes.length][2];
+  
+    if (reyes.length != leyes.length) return result;
+  
+    Rect[] rightCopy = new Rect[reyes.length];
+    System.arraycopy(reyes,0,rightCopy,0,reyes.length);
+  
+    for (int i = 0; i < leyes.length; i++){
+      Rect l = leyes[i];
+      Integer minDist = null;
+      Rect chosenRight = null;
+      int lx = l.x + l.width;
+    
+      for (int j = 0; j < rightCopy.length; j++){
+        Rect r = rightCopy[j];
+        int rx = r.x + (int)(0.3 * face.width);
+        if (minDist == null || minDist > rx - lx){
+          minDist = rx - lx;
+          chosenRight = r;
+        }
+      }
+    
+      if (chosenRight != null){
+        result[i][0] = new Rect(l.x + face.x, l.y + face.y, l.width, l.height);
+        result[i][1] = new Rect(chosenRight.x + face.x + (int)(0.3 * face.width),
+        chosenRight.y + face.y, chosenRight.width , chosenRight.height);
+      }
+    }
+   
+    return result;
   }
 
-  void setLight() {
-    float val = (float)light/(float)width*float(255);
-    ambientLight((int)val, val, val);
-    pointLight(204, 153, 0, light, height/2, 400);
-  }
-
-  void cameraControl() {
-    if (rotateRight) {
-      camMov--;
-      camMov %= 360;
-    }
-    if (rotateLeft) {
-      camMov++;
-      camMov %= 360;
-    }
-    if (zoomOut) {
-      if (posCam.sub(new PVector(0, 0, 5)).z<-width)posCam.z=width;
-      posCam.sub(new PVector(0, 0, 5));
-    }
-    if (zoomIn) {
-      if (posCam.add(new PVector(0, 0, 5)).z>width)posCam.z=-width;
-      posCam.add(new PVector(0, 0, 5));
-    }
-
-    x = (width/2.0)*(1 + sin(radians(camMov)));
-    z = -(width/2.0)*(1 + cos(radians(camMov)));
-  }
-
- <p align="center"><img src="images/escena.png" alt="Escena" width="500" height="500"></br>Pantalla final</p>
+ 
  
 
 
