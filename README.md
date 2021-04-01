@@ -149,7 +149,6 @@ Las mayores decisiones tomadas y las que mas pruebas requirieron fue la programa
    
     return result;
   }
-
 ## Referencias
 
 Para ayudarme en la realización de esta aplicación usé la API que te proporciona [Processing](https://www.processing.org/).
